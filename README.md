@@ -14,23 +14,23 @@
 Вы можете напрямую перенести эти файлы на вашу плату (например, через `scp`). Дальнейшие шаги выполняются на самой плате NanoPi через SSH.
 
 ### 1. Подготовка окружения
-Склонируйте или скопируйте файлы в директорию `/opt/nanopi_exporter` (или любую другую, но тогда поменяйте пути в `.service` файле).
+Установите `git`, если он ещё не установлен, и склонируйте этот репозиторий прямо в `/opt/nanopi_exporter` (это стандартный путь, если захотите другую папку — не забудьте поменять её в `.service` файле).
 
 ```bash
-# Переходим в /opt и создаем директорию
-sudo mkdir -p /opt/nanopi_exporter
-# (Скопируйте файлы nanopi_exporter.py, requirements.txt и nanopi_exporter.service в эту папку)
+# Обновляем систему и ставим нужные пакеты
+sudo apt update
+sudo apt install -y git python3-venv python3-pip python3-dev gcc
+
+# Переходим в /opt и клонируем репозиторий
+cd /opt
+sudo git clone https://github.com/iwizard7/nanopi_exporter.git
+
+# Переходим в папку с экспортёром
 cd /opt/nanopi_exporter
 ```
 
-Установите `python3-venv`, если он еще не установлен:
-```bash
-sudo apt update
-sudo apt install -y python3-venv python3-pip
-```
-
 ### 2. Создание виртуального окружения и установка зависимостей
-Так как новые версии Armbian (Debian/Ubuntu) запрещают установку пакетов через `pip` в систему, лучше использовать `venv`.
+Так как новые версии Armbian (Debian/Ubuntu) запрещают установку пакетов через `pip` глобально, мы используем изолированное окружение (`venv`).
 
 ```bash
 sudo python3 -m venv venv
