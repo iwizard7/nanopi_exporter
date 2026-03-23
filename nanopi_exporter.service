@@ -1,0 +1,14 @@
+[Unit]
+Description=NanoPi Prometheus Exporter
+After=network.target
+
+[Service]
+User=root
+WorkingDirectory=/opt/nanopi_exporter
+# Path to the python executable in the virtual environment
+ExecStart=/opt/nanopi_exporter/venv/bin/python /opt/nanopi_exporter/nanopi_exporter.py
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
