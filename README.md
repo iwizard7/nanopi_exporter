@@ -3,11 +3,12 @@
 Легковесный Prometheus экспортёр, написанный на Python, специально адаптированный для сбора метрик с платы NanoPi Neo Plus 2 под управлением Armbian.
 
 ## Собираемые метрики
-- **CPU**: Загрузка (%), частота (MHz), количество ядер.
+- **CPU**: Общая загрузка (%), загрузка по ядрам (%), частота (MHz) общая и по ядрам, количество ядер.
 - **Память**: Доступная, использованная (%), всего (байт).
-- **Диск**: Использование всех примонтированных разделов (кроме виртуальных), свободное/занятое место.
-- **Сеть**: Количество принятых и отправленных байт по интерфейсам.
-- **Система**: Температура SoC (опрашивает специфичные для Armbian пути), аптайм.
+- **Диск**: Использование всех примонтированных разделов (кроме виртуальных), свободное/занятое место, inode usage, disk I/O (bytes/ops).
+- **Сеть**: Bytes/packets RX/TX, ошибки/дропы, состояние интерфейса (up), MTU, скорость (если доступно через sysfs).
+- **Система**: Температура SoC и thermal zones, load average (1/5/15), аптайм.
+- **Экспортёр**: Длительность сбора метрик, счётчик ошибок по компонентам, ready/self-metrics.
 
 ## Установка на Nano Pi Neo Plus 2
 
@@ -41,6 +42,7 @@ sudo ./venv/bin/pip install -r requirements.txt
 Скопируйте сервис-файл в директорию systemd для автозапуска:
 
 ```bash
+sudo useradd --system --no-create-home --shell /usr/sbin/nologin nanopi-exporter
 sudo cp nanopi_exporter.service /etc/systemd/system/
 sudo systemctl daemon-reload
 sudo systemctl enable nanopi_exporter
@@ -55,8 +57,13 @@ sudo systemctl status nanopi_exporter
 
 Чтобы посмотреть сами метрики, сделайте запрос:
 ```bash
-curl http://localhost:9101/
+curl http://localhost:9101/metrics
 ```
+
+Дополнительно доступны health endpoints:
+
+- `GET /healthz` — всегда `200 ok`, если процесс жив
+- `GET /readyz` — `200 ready`, если сбор метрик успешно выполнялся недавно (иначе `503`)
 
 ## Настройка Prometheus сервера
 На вашем сервере с Prometheus добавьте следующий job в файл конфигурации `prometheus.yml`:
@@ -70,3 +77,14 @@ scrape_configs:
 (Замените `<IP_АДРЕС_NANOPI>` на реальный IP адрес вашей платы в локальной сети).
 
 Перезапустите ваш Prometheus сервер, и метрики начнут собираться!
+
+## Настройка (опционально)
+Экспортёр поддерживает настройку через переменные окружения или CLI-флаги:
+
+- **`NANOPI_EXPORTER_PORT` / `--port`**: порт (по умолчанию `9101`)
+- **`NANOPI_EXPORTER_BIND` / `--bind`**: адрес биндинга (по умолчанию `0.0.0.0`)
+- **`NANOPI_EXPORTER_INTERVAL_SECONDS` / `--interval-seconds`**: интервал обновления метрик (по умолчанию `5`)
+- **`NANOPI_EXPORTER_SKIP_FSTYPES` / `--skip-fstypes`**: игнорируемые типы ФС, через запятую
+- **`NANOPI_EXPORTER_IGNORE_IFACES` / `--ignore-ifaces`**: игнорируемые интерфейсы, через запятую (по умолчанию `lo`)
+- **`NANOPI_EXPORTER_LOG_LEVEL` / `--log-level`**: уровень логов (`INFO`, `DEBUG`, ...)
+- **`NANOPI_EXPORTER_READY_MAX_AGE_SECONDS` / `--ready-max-age-seconds`**: максимальный “возраст” последнего успешного сбора для `/readyz` (по умолчанию `30`)

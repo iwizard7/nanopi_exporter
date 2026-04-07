@@ -444,6 +444,418 @@
           }
         }
       }
+    },
+    {
+      "type": "timeseries",
+      "title": "Load average (1/5/15)",
+      "gridPos": {
+        "x": 0,
+        "y": 22,
+        "w": 12,
+        "h": 8
+      },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
+      "targets": [
+        {
+          "expr": "nanopi_load1{instance=~'$instance'}",
+          "legendFormat": "load1 - {{instance}}"
+        },
+        {
+          "expr": "nanopi_load5{instance=~'$instance'}",
+          "legendFormat": "load5 - {{instance}}"
+        },
+        {
+          "expr": "nanopi_load15{instance=~'$instance'}",
+          "legendFormat": "load15 - {{instance}}"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "smooth",
+            "lineWidth": 1,
+            "fillOpacity": 10
+          }
+        }
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "CPU per-core usage",
+      "gridPos": {
+        "x": 12,
+        "y": 22,
+        "w": 12,
+        "h": 8
+      },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
+      "targets": [
+        {
+          "expr": "nanopi_cpu_core_usage_percent{instance=~'$instance'}",
+          "legendFormat": "cpu{{cpu}} - {{instance}}"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent",
+          "min": 0,
+          "max": 100,
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "smooth",
+            "lineWidth": 1,
+            "fillOpacity": 8
+          }
+        }
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "Thermal zones",
+      "gridPos": {
+        "x": 0,
+        "y": 30,
+        "w": 12,
+        "h": 8
+      },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
+      "targets": [
+        {
+          "expr": "nanopi_thermal_zone_temperature_celsius{instance=~'$instance'}",
+          "legendFormat": "zone{{zone}} {{type}} - {{instance}}"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "celsius",
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "smooth",
+            "lineWidth": 1,
+            "fillOpacity": 8
+          }
+        }
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "Disk IO (bytes/sec)",
+      "gridPos": {
+        "x": 12,
+        "y": 30,
+        "w": 12,
+        "h": 8
+      },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
+      "targets": [
+        {
+          "expr": "rate(nanopi_disk_read_bytes_total{instance=~'$instance'}[1m])",
+          "legendFormat": "read {{device}} - {{instance}}"
+        },
+        {
+          "expr": "rate(nanopi_disk_write_bytes_total{instance=~'$instance'}[1m]) * -1",
+          "legendFormat": "write {{device}} - {{instance}}"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "Bps",
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "smooth",
+            "lineWidth": 1,
+            "fillOpacity": 15
+          }
+        }
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "Disk IO (ops/sec)",
+      "gridPos": {
+        "x": 12,
+        "y": 46,
+        "w": 12,
+        "h": 8
+      },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
+      "targets": [
+        {
+          "expr": "rate(nanopi_disk_reads_completed_total{instance=~'$instance'}[1m])",
+          "legendFormat": "reads {{device}} - {{instance}}"
+        },
+        {
+          "expr": "rate(nanopi_disk_writes_completed_total{instance=~'$instance'}[1m]) * -1",
+          "legendFormat": "writes {{device}} - {{instance}}"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "smooth",
+            "lineWidth": 1,
+            "fillOpacity": 10
+          }
+        }
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "Network errors & drops (packets/sec)",
+      "gridPos": {
+        "x": 0,
+        "y": 38,
+        "w": 12,
+        "h": 8
+      },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
+      "targets": [
+        {
+          "expr": "rate(nanopi_network_receive_errors_total{instance=~'$instance'}[1m])",
+          "legendFormat": "rx err {{interface}} - {{instance}}"
+        },
+        {
+          "expr": "rate(nanopi_network_transmit_errors_total{instance=~'$instance'}[1m])",
+          "legendFormat": "tx err {{interface}} - {{instance}}"
+        },
+        {
+          "expr": "rate(nanopi_network_receive_dropped_total{instance=~'$instance'}[1m])",
+          "legendFormat": "rx drop {{interface}} - {{instance}}"
+        },
+        {
+          "expr": "rate(nanopi_network_transmit_dropped_total{instance=~'$instance'}[1m])",
+          "legendFormat": "tx drop {{interface}} - {{instance}}"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "smooth",
+            "lineWidth": 1,
+            "fillOpacity": 10
+          }
+        }
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "Network packets (packets/sec)",
+      "gridPos": {
+        "x": 0,
+        "y": 46,
+        "w": 12,
+        "h": 8
+      },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
+      "targets": [
+        {
+          "expr": "rate(nanopi_network_receive_packets_total{instance=~'$instance'}[1m])",
+          "legendFormat": "RX {{interface}} - {{instance}}"
+        },
+        {
+          "expr": "rate(nanopi_network_transmit_packets_total{instance=~'$instance'}[1m]) * -1",
+          "legendFormat": "TX {{interface}} - {{instance}}"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "smooth",
+            "lineWidth": 1,
+            "fillOpacity": 20
+          }
+        }
+      }
+    },
+    {
+      "type": "gauge",
+      "title": "Root inode usage",
+      "gridPos": {
+        "x": 12,
+        "y": 38,
+        "w": 6,
+        "h": 8
+      },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
+      "targets": [
+        {
+          "expr": "nanopi_disk_inodes_usage_percent{instance=~'$instance', mountpoint='/'}",
+          "legendFormat": "{{instance}} /"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent",
+          "min": 0,
+          "max": 100,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "orange", "value": 80 },
+              { "color": "red", "value": 90 }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "Interfaces (up=1)",
+      "gridPos": {
+        "x": 18,
+        "y": 38,
+        "w": 6,
+        "h": 8
+      },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
+      "targets": [
+        {
+          "expr": "nanopi_network_interface_up{instance=~'$instance'}",
+          "legendFormat": "{{interface}} - {{instance}}"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "min": 0,
+          "max": 1,
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "stepAfter",
+            "lineWidth": 2,
+            "fillOpacity": 0
+          }
+        }
+      }
+    },
+    {
+      "type": "stat",
+      "title": "Exporter ready",
+      "gridPos": {
+        "x": 0,
+        "y": 54,
+        "w": 4,
+        "h": 6
+      },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
+      "targets": [
+        {
+          "expr": "nanopi_exporter_ready{instance=~'$instance'}",
+          "legendFormat": "{{instance}}"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "min": 0,
+          "max": 1,
+          "mappings": [
+            { "type": "value", "options": { "0": { "text": "not ready" }, "1": { "text": "ready" } } }
+          ],
+          "color": { "mode": "thresholds" },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "red", "value": null },
+              { "color": "green", "value": 1 }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "Exporter collect time (avg, seconds)",
+      "gridPos": {
+        "x": 4,
+        "y": 54,
+        "w": 10,
+        "h": 6
+      },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
+      "targets": [
+        {
+          "expr": "rate(nanopi_exporter_collect_seconds_sum{instance=~'$instance'}[5m]) / rate(nanopi_exporter_collect_seconds_count{instance=~'$instance'}[5m])",
+          "legendFormat": "avg - {{instance}}"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s",
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "smooth",
+            "lineWidth": 1,
+            "fillOpacity": 10
+          }
+        }
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "Exporter errors (rate)",
+      "gridPos": {
+        "x": 14,
+        "y": 54,
+        "w": 10,
+        "h": 6
+      },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
+      "targets": [
+        {
+          "expr": "sum by (component, instance) (rate(nanopi_exporter_errors_total{instance=~'$instance'}[5m]))",
+          "legendFormat": "{{component}} - {{instance}}"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "smooth",
+            "lineWidth": 1,
+            "fillOpacity": 10
+          }
+        }
+      }
     }
   ]
 }

@@ -3,12 +3,18 @@ Description=NanoPi Prometheus Exporter
 After=network.target
 
 [Service]
-User=root
+User=nanopi-exporter
 WorkingDirectory=/opt/nanopi_exporter
 # Path to the python executable in the virtual environment
 ExecStart=/opt/nanopi_exporter/venv/bin/python /opt/nanopi_exporter/nanopi_exporter.py
 Restart=always
 RestartSec=5
+
+# Optional configuration (override in a drop-in or via /etc/default/nanopi_exporter)
+# Environment="NANOPI_EXPORTER_BIND=127.0.0.1"
+# Environment="NANOPI_EXPORTER_PORT=9101"
+# Environment="NANOPI_EXPORTER_INTERVAL_SECONDS=5"
+# Environment="NANOPI_EXPORTER_LOG_LEVEL=INFO"
 
 [Install]
 WantedBy=multi-user.target
